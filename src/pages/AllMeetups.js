@@ -6,21 +6,25 @@ function AllMeetupsPage() {
   const [loadedMeetups, setLoadedMeetups] = useState([]);
 
   useEffect(() => {
-    function fetchMeetups() {
-      fetch(
-        "https://react-meetup-c4d10-default-rtdb.firebaseio.com/meetups.json"
-      )
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          setIsLoading(false);
-          // setLoadedMeetups(data);
-          console.log(data);
-        });
-    }
+    setIsLoading(true);
+    fetch("https://react-meetup-c4d10-default-rtdb.firebaseio.com/meetups.json")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const meetups = [];
 
-    fetchMeetups();
+        for (const key in data) {
+          const meetup = {
+            id: key,
+            ...data[key],
+          };
+
+          meetups.push(meetup);
+        }
+        setIsLoading(false);
+        setLoadedMeetups(meetups);
+      });
   }, []);
 
   if (isLoading) {
